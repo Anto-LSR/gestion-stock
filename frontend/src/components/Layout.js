@@ -1,5 +1,6 @@
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import "./Layout.css"; // Pour les styles
+import logo from '../assets/GooseLogo.png';
 
 function Layout() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ function Layout() {
         {/* Sidebar */}
         <div className="sidePanel">
           <div className="logoContainer">
-            <img src="/GooseLogo.png" alt="Logo" />
+            <img src={logo} alt="Logo" />
           </div>
           <div className="menu">
             <ul>

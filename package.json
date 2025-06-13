@@ -2,21 +2,20 @@
   "name": "app-gestion-stock",
   "version": "1.0.0",
   "main": "public/electron/main.js",
+  "description": "Gestion stock desktop app avec React + Electron",
+  "author": "Antonin Lesueur",
+  "license": "ISC",
   "scripts": {
     "react-start": "cd frontend && yarn start",
     "react-build": "cd frontend && yarn build",
     "electron-start": "cross-env ELECTRON_START_URL=http://localhost:3000 electron .",
-    "electron-prod": "yarn react-build && electron ."
+    "electron-prod": "yarn react-build && electron .",
+    "dist": "yarn react-build && electron-builder --mac --x64 --arm64"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "bootstrap": "^5.3.3",
     "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
-    "electron": "^35.0.0",
     "knex": "^3.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -25,10 +24,41 @@
     "wait-on": "^8.0.2"
   },
   "devDependencies": {
+    "electron": "^35.0.0",
     "electron-builder": "^25.1.8",
     "electron-reload": "^2.0.0-alpha.1",
     "nodemon": "^3.1.9",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1"
+  },
+  "build": {
+    "appId": "com.appgestionstock.app",
+    "extends": null,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "public/electron/**/*",
+      "frontend/build/**/*",
+      "backend/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "public/electron/assets",
+        "to": "assets",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/electron/assets/gooseIco.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "public/electron/assets/gooseIco.icns"
+    }
   }
 }
