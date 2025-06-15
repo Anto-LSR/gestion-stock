@@ -1,8 +1,6 @@
 const { knex } = require("../db");
 
 const createReceptionWithLignes = async (reception, lignes) => {
-    console.log(reception, lignes);
-
     try {
         return await knex.transaction(async (trx) => {
             // Met à jour le stock (augmentation stock_reel) pour chaque ligne reçue

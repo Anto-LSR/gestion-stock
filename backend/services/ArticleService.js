@@ -9,7 +9,6 @@ const addArticle = async (articleData) => {
     delete articleData.prix;
     // Insérer l'article et récupérer son ID
     const [id] = await knex("articles").insert(articleData);
-    console.log(articleData);
 
     // Construire le tarif avec l'ID généré
     tarif.id_article = id;
@@ -111,7 +110,7 @@ const decrementStockReel = async (articleId, quantityToSubtract) => {
       .where({ id: articleId })
       .decrement("stock_reel", quantityToSubtract);
 
-    console.log(`✅ Stock réel de l'article ${articleId} diminué de ${quantityToSubtract}.`);
+    console.log(`Stock réel de l'article ${articleId} diminué de ${quantityToSubtract}.`);
   } catch (err) {
     console.error("❌ Erreur lors de la diminution du stock réel :", err.message);
     throw err;

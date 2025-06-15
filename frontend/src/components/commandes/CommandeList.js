@@ -198,11 +198,11 @@ const CommandeList = ({ commandes, fetchCommandes, clients, articles }) => {
                               onClick={() => {
                                 const nextValue = !commande.livree;
                                 const message = nextValue
-                                  ? "Marquer cette commande comme livrée ? Cette action décrémentera le stock réel pour les articles de la commande"
-                                  : "Annuler l'état livrée ? Cette action mettra le stock à jour";
-                                if (window.confirm(message)) {
+                                  ? "Souhaitez-vous marquer cette commande comme livrée ? Le stock des articles sera automatiquement mis à jour."
+                                  : "Annuler la livraison de cette commande ? Le stock des articles sera mis à jour automatiquement.";
+                                // if (window.confirm(message)) {
                                   updateCommande(commande.id, { livree: nextValue });
-                                }
+                                // }
                               }}
                             >
                               Livrée
@@ -215,9 +215,9 @@ const CommandeList = ({ commandes, fetchCommandes, clients, articles }) => {
                                 const message = nextValue
                                   ? "Marquer cette commande comme payée ?"
                                   : "Annuler l'état payée ?";
-                                if (window.confirm(message)) {
+                                // if (window.confirm(message)) {
                                   updateCommande(commande.id, { payee: nextValue });
-                                }
+                                // }
                               }}
                             >
                               Payée
@@ -240,9 +240,9 @@ const CommandeList = ({ commandes, fetchCommandes, clients, articles }) => {
                                 const message = nextValue
                                   ? "Confirmer la finalisation de cette commande ? Cela indique que le chèque et le bon de livraison ont été envoyés au fournisseur."
                                   : "Annuler l'état finalisée ?";
-                                if (window.confirm(message)) {
+                                // if (window.confirm(message)) {
                                   updateCommande(commande.id, { finalisee: nextValue });
-                                }
+                                // }
                               }}
                             >
                               Finalisée
@@ -255,9 +255,9 @@ const CommandeList = ({ commandes, fetchCommandes, clients, articles }) => {
                                 <button
                                   className="btn btn-sm btn-outline-danger"
                                   onClick={() => {
-                                    if (window.confirm("Annuler cette commande ?")) {
+                                    // if (window.confirm("Annuler cette commande ?")) {
                                       updateCommande(commande.id, { annulee: true });
-                                    }
+                                    // }
                                   }}
                                 >
                                   Annuler

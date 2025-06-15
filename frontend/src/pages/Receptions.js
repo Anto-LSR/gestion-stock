@@ -34,8 +34,6 @@ function Receptions() {
     fetchArticles();
   }, []);
 
-  console.log(receptions);
-
   return (
     <div className="container mt-4">
       <ReceptionList receptions={receptions} fetchReceptions={fetchReceptionsWithLignes} articles={articles} fetchArticles={fetchArticles} />

@@ -12,7 +12,6 @@ if (process.env.NODE_ENV === "development") {
   // En prod : on copie la base dans userData/data
   const userDataPath = app.getPath("userData");
   const dbDir = path.join(userDataPath, "data");
-  console.log(dbDir)
   if (!fs.existsSync(dbDir)) {
     fs.mkdirSync(dbDir, { recursive: true });
   }

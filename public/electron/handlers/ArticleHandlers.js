@@ -12,16 +12,13 @@ const {
   getAllTarifs,
   getTarifsByArticle,
   addTarif,
-  deleteTarif
+  deleteTarif,
 } = require("../../../backend/services/ArticleService");
 
 const initializeArticleHandlers = () => {
   // Gérer l'ajout d'un article
   ipcMain.handle("add-article", async (event, article) => {
     try {
-      console.log(article);
-      
-      console.log("Insertion...");
       article.is_active = true;
       const id = await addArticle(article);
       return { success: true, id };
@@ -101,11 +98,11 @@ const initializeArticleHandlers = () => {
 
   ipcMain.handle("decrement-stock-reel", async (event, id, qt) => {
     try {
-      await decrementStockReel(id, qt)
+      await decrementStockReel(id, qt);
     } catch (error) {
       return { success: false, error };
     }
-  })
+  });
 };
 
 // Tarif
@@ -115,15 +112,15 @@ ipcMain.handle("get-tarifs-by-article", async (event, id) => {
   } catch (error) {
     return { success: false, error };
   }
-})
+});
 
 ipcMain.handle("get-all-tarifs", async (event) => {
   try {
-    return await getAllTarifs()
+    return await getAllTarifs();
   } catch (error) {
     return { success: false, error };
   }
-})
+});
 
 ipcMain.handle("add-tarif", async (event, tarif) => {
   try {
@@ -131,7 +128,7 @@ ipcMain.handle("add-tarif", async (event, tarif) => {
   } catch (error) {
     return { success: false, error };
   }
-})
+});
 
 ipcMain.handle("delete-tarif", async (event, tarif) => {
   try {
@@ -139,6 +136,6 @@ ipcMain.handle("delete-tarif", async (event, tarif) => {
   } catch (error) {
     return { success: false, error };
   }
-})
+});
 
 module.exports = { initializeArticleHandlers };

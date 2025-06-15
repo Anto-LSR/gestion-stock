@@ -2,8 +2,6 @@ const { knex } = require("../db"); // Importation de l'instance knex
 
 const addClient = async (clientData) => {
   try {
-    console.log(clientData);
-    
     const [id] = await knex("clients").insert(clientData);
     return id;
   } catch (err) {

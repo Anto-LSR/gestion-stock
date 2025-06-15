@@ -19,8 +19,6 @@ function Stock() {
     fetchArticles();
   }, []);
 
-  console.log(articles);
-
   return (
     <div className="container mt-4">
       <StockList articles={articles} fetchArticles={fetchArticles} />

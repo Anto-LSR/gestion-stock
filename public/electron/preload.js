@@ -33,6 +33,7 @@ contextBridge.exposeInMainWorld("api", {
 
   // Commandes
   getCommandeWithLignes: (id) => ipcRenderer.invoke("get-commande-with-lignes", id),
+  getCommandesWithLignesByArticleId: (id) => ipcRenderer.invoke("get-commande-with-lignes-by-article-id", id),
   createCommandeWithLignes: (commande, lignes) => ipcRenderer.invoke("create-commande-with-lignes", commande, lignes),
   updateCommandeWithLignes: (commande, lignes) => ipcRenderer.invoke("update-commande-with-lignes", commande, lignes),
   createCommande: (commande) => ipcRenderer.invoke("create-commande", commande),

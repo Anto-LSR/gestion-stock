@@ -22,19 +22,12 @@ const CommandeInfo = () => {
           window.api.getAllTarifs(),
         ]);
 
-        console.log(tarifsList);
-
-
         setClients(clientList);
         setArticles(articleList);
         setArticleTarifs(tarifsList);
-        console.log(articleTarifs);
-
 
         if (!isNewCommande) {
           const fetchedCommande = await window.api.getCommandeWithLignes(id);
-          console.log("Clients chargés :", clientList);
-          console.log("Commande chargée :", fetchedCommande);
 
           setCommande({
             ...fetchedCommande.commande,
@@ -51,7 +44,6 @@ const CommandeInfo = () => {
               isExisting: true, // 👈 Ligne existante
             }))
           );
-
         }
       } catch (error) {
         console.error("Erreur chargement commande :", error);
@@ -62,15 +54,11 @@ const CommandeInfo = () => {
     fetchData();
   }, [id]);
 
-  useEffect(() => {
-    console.log("✅ articleTarifs mis à jour :", articleTarifs);
-  }, [articleTarifs]);
-
+  useEffect(() => {}, [articleTarifs]);
 
   const addLigne = () => {
     setLignes([...lignes, { article_id: "", qt: 1, isExisting: false }]);
   };
-
 
   const updateLigne = (index, field, value) => {
     const updated = [...lignes];
@@ -87,23 +75,26 @@ const CommandeInfo = () => {
     setLignes(updated);
   };
 
-
   const removeLigne = (index) => {
     setLignes(lignes.filter((_, i) => i !== index));
   };
 
   const getTotal = () => {
-    return lignes.reduce((total, ligne) => {
-      const prix = ligne.prix_unitaire != null ? parseFloat(ligne.prix_unitaire) : (
-        (() => {
-          const article = articles.find(a => a.id == ligne.article_id);
-          return article ? parseFloat(article.prix_unitaire || article.prix || 0) : 0;
-        })()
-      );
-      return total + (prix * (ligne.qt || 1));
-    }, 0).toFixed(2);
+    return lignes
+      .reduce((total, ligne) => {
+        const prix =
+          ligne.prix_unitaire != null
+            ? parseFloat(ligne.prix_unitaire)
+            : (() => {
+                const article = articles.find((a) => a.id == ligne.article_id);
+                return article
+                  ? parseFloat(article.prix_unitaire || article.prix || 0)
+                  : 0;
+              })();
+        return total + prix * (ligne.qt || 1);
+      }, 0)
+      .toFixed(2);
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -119,20 +110,22 @@ const CommandeInfo = () => {
     }
 
     const lignesValides = lignes
-      .filter(l => l.article_id && l.qt > 0)
-      .map(l => {
+      .filter((l) => l.article_id && l.qt > 0)
+      .map((l) => {
         return {
           article_id: l.article_id,
-          prix_unitaire: l.prix_unitaire != null ? parseFloat(l.prix_unitaire) : (
-            (() => {
-              const article = articles.find(a => a.id == l.article_id);
-              return article ? parseFloat(article.prix_unitaire || article.prix || 0) : 0;
-            })()
-          ),
+          prix_unitaire:
+            l.prix_unitaire != null
+              ? parseFloat(l.prix_unitaire)
+              : (() => {
+                  const article = articles.find((a) => a.id == l.article_id);
+                  return article
+                    ? parseFloat(article.prix_unitaire || article.prix || 0)
+                    : 0;
+                })(),
           qt: l.qt,
         };
       });
-
 
     if (lignesValides.length === 0) {
       toast.warning("Ajoutez au moins un article.");
@@ -143,26 +136,32 @@ const CommandeInfo = () => {
       if (!isNewCommande) {
         // 🔄 Récupère l'ancienne commande pour ajustement
         const ancienneCommande = await window.api.getCommandeWithLignes(id);
-        lignesValides.forEach(ligne => {
-          const article = articles.find(a => a.id == ligne.article_id);
-          const ancienneLigne = ancienneCommande.lignes.find(l => l.article_id == ligne.article_id);
+        lignesValides.forEach((ligne) => {
+          const article = articles.find((a) => a.id == ligne.article_id);
+          const ancienneLigne = ancienneCommande.lignes.find(
+            (l) => l.article_id == ligne.article_id
+          );
           const ancienneQt = ancienneLigne ? ancienneLigne.qt : 0;
           const diff = ligne.qt - ancienneQt;
 
           if (diff > 0) {
             const stockDispo = article.stock_reel - article.stock_reserve;
             if (diff > stockDispo) {
-              throw new Error(`Stock insuffisant pour l'article ${article.designation}`);
+              throw new Error(
+                `Stock insuffisant pour l'article ${article.designation}`
+              );
             }
           }
         });
       } else {
         // 🆕 Vérifie que chaque article a assez de stock disponible
-        lignesValides.forEach(ligne => {
-          const article = articles.find(a => a.id == ligne.article_id);
+        lignesValides.forEach((ligne) => {
+          const article = articles.find((a) => a.id == ligne.article_id);
           const stockDispo = article.stock_reel - article.stock_reserve;
           if (ligne.qt > stockDispo) {
-            throw new Error(`Stock insuffisant pour l'article ${article.designation}`);
+            throw new Error(
+              `Stock insuffisant pour l'article ${article.designation}`
+            );
           }
         });
       }
@@ -170,7 +169,10 @@ const CommandeInfo = () => {
       // ✅ Si tout est bon, sauvegarde
       if (isNewCommande) {
         const newCommande = await window.api.createCommandeWithLignes({
-          commande: { user_id: commande.user_id, facturation: commande.facturation },
+          commande: {
+            user_id: commande.user_id,
+            facturation: commande.facturation,
+          },
           lignes: lignesValides,
         });
         toast.success("Commande créée !");
@@ -178,7 +180,10 @@ const CommandeInfo = () => {
       } else {
         await window.api.updateCommandeWithLignes({
           id,
-          commande: { user_id: commande.user_id, facturation: commande.facturation },
+          commande: {
+            user_id: commande.user_id,
+            facturation: commande.facturation,
+          },
           lignes: lignesValides,
         });
         toast.success("Commande mise à jour !");
@@ -190,10 +195,12 @@ const CommandeInfo = () => {
     }
   };
 
-
   return (
     <div className="container mt-4">
-      <button onClick={() => navigate("/commandes")} className="btn btn-secondary mb-3">
+      <button
+        onClick={() => navigate("/commandes")}
+        className="btn btn-secondary mb-3"
+      >
         <i className="fas fa-arrow-left me-2"></i> Retour
       </button>
 
@@ -223,25 +230,25 @@ const CommandeInfo = () => {
               </select>
             </div>
 
-
             <h5>Articles</h5>
             {lignes.map((ligne, index) => (
               <div className="d-flex gap-2 mb-2" key={index}>
                 <select
                   className="form-select"
                   value={ligne.article_id}
-                  onChange={(e) => updateLigne(index, "article_id", e.target.value)}
+                  onChange={(e) =>
+                    updateLigne(index, "article_id", e.target.value)
+                  }
                   disabled={ligne.isExisting} // 👈 On désactive l’article si c’est une ligne existante
                 >
                   <option value="">Sélectionner un article</option>
                   {articles
-                    .filter(article => article.is_active)
-                    .map(article => (
+                    .filter((article) => article.is_active)
+                    .map((article) => (
                       <option key={article.id} value={article.id}>
                         {article.designation}
                       </option>
-                    ))
-                  }
+                    ))}
                 </select>
 
                 {ligne.isExisting ? (
@@ -257,15 +264,25 @@ const CommandeInfo = () => {
                     className="form-select"
                     disabled={!ligne.article_id}
                     value={ligne.prix_unitaire ?? ""}
-                    onChange={(e) => updateLigne(index, "prix_unitaire", parseFloat(e.target.value))}
+                    onChange={(e) =>
+                      updateLigne(
+                        index,
+                        "prix_unitaire",
+                        parseFloat(e.target.value)
+                      )
+                    }
                   >
                     <option value="">Sélectionner un tarif</option>
                     {Array.isArray(articleTarifs) &&
                       articleTarifs
-                        .filter((t) => String(t.id_article) === String(ligne.article_id))
+                        .filter(
+                          (t) =>
+                            String(t.id_article) === String(ligne.article_id)
+                        )
                         .map((tarif) => (
                           <option key={tarif.id} value={tarif.pu}>
-                            {new Date(tarif.date).toLocaleDateString()} - {parseFloat(tarif.pu).toFixed(2)} €
+                            {new Date(tarif.date).toLocaleDateString()} -{" "}
+                            {parseFloat(tarif.pu).toFixed(2)} €
                           </option>
                         ))}
                   </select>
@@ -275,22 +292,29 @@ const CommandeInfo = () => {
                   type="number"
                   min="1"
                   className="form-control"
-                  style={{ maxWidth: '80px' }}
+                  style={{ maxWidth: "80px" }}
                   value={ligne.qt}
                   onChange={(e) => updateLigne(index, "qt", e.target.value)}
                   disabled={commande.finalisee}
                 />
-                {
-                  !commande.finalisee && (<button type="button" className="btn btn-danger" onClick={() => removeLigne(index)}>
+                {!commande.finalisee && (
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => removeLigne(index)}
+                  >
                     Supprimer
-                  </button>)
-                }
-
+                  </button>
+                )}
               </div>
             ))}
 
             {!commande.finalisee && (
-              <button type="button" className="btn btn-secondary mb-3" onClick={addLigne}>
+              <button
+                type="button"
+                className="btn btn-secondary mb-3"
+                onClick={addLigne}
+              >
                 + Ajouter un article
               </button>
             )}

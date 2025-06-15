@@ -36,7 +36,6 @@ const ClientInfo = () => {
       is_active: true,
       ...clientInfos // Ajoute toutes les infos du client à l'objet
     };
-    console.log(clientData);
     
     try {
       if (window.api && typeof window.api.addClient === 'function') {

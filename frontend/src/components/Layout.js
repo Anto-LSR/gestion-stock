@@ -8,7 +8,7 @@ function Layout() {
       <div className="mainContainer">
         {/* Sidebar */}
         <div className="sidePanel">
-          <div className="logoContainer">
+          <div className="logoContainer mb-5">
             <img src={logo} alt="Logo" />
           </div>
           <div className="menu">

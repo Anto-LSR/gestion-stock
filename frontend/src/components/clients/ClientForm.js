@@ -8,9 +8,6 @@ function ClientForm() {
     try {
       if (window.api && typeof window.api.addClient === 'function') {
         await window.api.addClient({ is_active: true, });
-        console.log("Client ajouté, redirection...");
-
-        //onClientAdded(); // Refresh the list
         toast.success('Client ajouté.')
 
       } else {

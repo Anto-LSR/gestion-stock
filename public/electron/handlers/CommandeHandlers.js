@@ -11,7 +11,8 @@ const {
     addCommandeLigne,
     getCommandeLignes,
     updateCommandeLigne,
-    deleteCommandeLigne
+    deleteCommandeLigne,
+    getCommandesWithLignesByArticleId
 } = require("../../../backend/services/CommandeService");
 
 const initializeCommandeHandlers = () => {
@@ -29,6 +30,15 @@ const initializeCommandeHandlers = () => {
     ipcMain.handle("get-commande-with-lignes", async (event, id) => {
         try {
             return await getCommandeWithLignes(id);
+        } catch (error) {
+            console.error("❌ Erreur get-commande-with-lignes :", error);
+            throw error;
+        }
+    });
+    
+    ipcMain.handle("get-commande-with-lignes-by-article-id", async (event, id) => {
+        try {
+            return await getCommandesWithLignesByArticleId(id);
         } catch (error) {
             console.error("❌ Erreur get-commande-with-lignes :", error);
             throw error;
