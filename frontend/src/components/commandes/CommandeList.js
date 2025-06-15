@@ -64,7 +64,7 @@ const CommandeList = ({ commandes, fetchCommandes, clients, articles }) => {
     });
   }
 
-  const nbCommandesAFinaliser = commandes.filter(c => c.payee && c.livree && c.cheque_envoye && !c.finalisee).length;
+  const nbCommandesAFinaliser = commandes.filter(c => c.payee && c.livree && !c.finalisee).length;
 
   // Gestion du clic sur l'entête Date pour changer le tri
   const toggleSortDate = () => {
@@ -160,13 +160,13 @@ const CommandeList = ({ commandes, fetchCommandes, clients, articles }) => {
                 </th>
                 <th>Total</th>
                 <th>Actions</th>
-                <th>Changer le statut</th>
+                <th>Statut</th>
               </tr>
             </thead>
 
             <tbody>
               {commandesFiltrees.map((commande) => {
-                const canFinalize = commande.livree && commande.payee && commande.cheque_envoye;
+                const canFinalize = commande.livree && commande.payee;
 
                 let rowClass = "";
                 if (commande.annulee) {
@@ -191,15 +191,15 @@ const CommandeList = ({ commandes, fetchCommandes, clients, articles }) => {
                     <td onClick={(e) => e.stopPropagation()}>
                       <div className="d-flex flex-wrap gap-2">
 
-                        {!commande.annulee && (
+                        {!commande.annulee && !commande.finalisee &&(
                           <>
                             <button
                               className={`btn btn-sm ${commande.livree ? "btn-success" : "btn-outline-success"}`}
                               onClick={() => {
                                 const nextValue = !commande.livree;
                                 const message = nextValue
-                                  ? "Marquer cette commande comme livrée ?"
-                                  : "Annuler l'état livrée ?";
+                                  ? "Marquer cette commande comme livrée ? Cette action décrémentera le stock réel pour les articles de la commande"
+                                  : "Annuler l'état livrée ? Cette action mettra le stock à jour";
                                 if (window.confirm(message)) {
                                   updateCommande(commande.id, { livree: nextValue });
                                 }
@@ -221,21 +221,6 @@ const CommandeList = ({ commandes, fetchCommandes, clients, articles }) => {
                               }}
                             >
                               Payée
-                            </button>
-
-                            <button
-                              className={`btn btn-sm ${commande.cheque_envoye ? "btn-warning" : "btn-outline-warning"}`}
-                              onClick={() => {
-                                const nextValue = !commande.cheque_envoye;
-                                const message = nextValue
-                                  ? "Marquer le chèque comme envoyé ?"
-                                  : "Annuler l'envoi du chèque ?";
-                                if (window.confirm(message)) {
-                                  updateCommande(commande.id, { cheque_envoye: nextValue });
-                                }
-                              }}
-                            >
-                              Chèque
                             </button>
                           </>
                         )}
@@ -260,7 +245,7 @@ const CommandeList = ({ commandes, fetchCommandes, clients, articles }) => {
                                 }
                               }}
                             >
-                              Finaliser
+                              Finalisée
                             </button>
 
                             {!commande.livree &&
@@ -303,7 +288,7 @@ const CommandeList = ({ commandes, fetchCommandes, clients, articles }) => {
         <div className="d-none d-print-block mt-5">
           <h4>Commandes réglées</h4>
           {commandes
-            .filter(c => c.livree && c.payee && c.cheque_envoye && !c.finalisee)
+            .filter(c => c.livree && c.payee && !c.finalisee)
             .map((commande) => {
               const client = clients.find((c) => c.id === commande.user_id);
               return (

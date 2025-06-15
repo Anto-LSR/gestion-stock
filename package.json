@@ -8,6 +8,7 @@
   "scripts": {
     "react-start": "cd frontend && yarn start",
     "react-build": "cd frontend && yarn build",
+    "elec-rebuild": "electron-rebuild",
     "electron-start": "cross-env ELECTRON_START_URL=http://localhost:3000 electron .",
     "electron-prod": "yarn react-build && electron .",
     "dist": "yarn react-build && electron-builder --mac --x64 --arm64"
@@ -16,6 +17,7 @@
     "bootstrap": "^5.3.3",
     "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
+    "electron-rebuild": "^3.2.9",
     "knex": "^3.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -54,11 +56,15 @@
     ],
     "win": {
       "target": "nsis",
-      "icon": "public/electron/assets/gooseIco.ico"
+      "icon": "public/electron/assets/logovin.png"
     },
     "mac": {
       "target": "dmg",
-      "icon": "public/electron/assets/gooseIco.icns"
+      "icon": "public/electron/assets/logovin.png",
+      "extendInfo": {
+        "CFBundleName": "Gestion Vin",
+        "CFBundleDisplayName": "Gestion Vin"
+      }
     }
   }
 }

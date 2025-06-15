@@ -45,5 +45,10 @@ contextBridge.exposeInMainWorld("api", {
   getCommandeLignes: (commandeId) => ipcRenderer.invoke("get-commande-lignes", commandeId),
   updateCommandeLigne: (ligne) => ipcRenderer.invoke("update-commande-ligne", ligne),
   deleteCommandeLigne: (id) => ipcRenderer.invoke("delete-commande-ligne", id),
-  getAllCommandesWithLignes: () => ipcRenderer.invoke("get-all-commandes-with-lignes")
+  getAllCommandesWithLignes: () => ipcRenderer.invoke("get-all-commandes-with-lignes"),
+
+  // Receptions
+  createReceptionWithLignes: (reception, lignes) => ipcRenderer.invoke("create-reception-with-lignes", reception, lignes),
+  getReceptionWithLignes: (id) => ipcRenderer.invoke("get-reception-with-lignes", id),
+  getAllReceptionsWithLignes: () => ipcRenderer.invoke("get-all-receptions-with-lignes")
 });

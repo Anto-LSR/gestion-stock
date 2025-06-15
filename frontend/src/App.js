@@ -6,9 +6,10 @@ import Commandes from "./pages/Commandes";
 import Stock from "./pages/Stock";
 import { ToastContainer, toast } from 'react-toastify';
 import ClientInfo from "./components/clients/ClientInfo";
-import Horaires from "./pages/Horaires";
 import ArticleInfo from "./components/articles/ArticleInfo";
 import CommandeInfo from "./components/commandes/CommandeInfo";
+import Receptions from "./pages/Receptions";
+import ReceptionInfo from "./components/receptions/ReceptionInfo";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
           <Route path="commandes" element={<Commandes />} />
           <Route path="commandes/info/:id" element={<CommandeInfo />} />
           <Route path="stock" element={<Stock />} />
+          <Route path="receptions" element={<Receptions />} />
+          <Route path="receptions/info/:id" element={<ReceptionInfo />} />
         </Route>
       </Routes>
       <ToastContainer
@@ -35,7 +38,7 @@ function App() {
         draggable
         pauseOnHover
         theme="dark"
-        />
+      />
     </Router>
   );
 }
